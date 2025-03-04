@@ -10,7 +10,8 @@ export default function DatabaseConnect() {
     username: "",
     password: "",
     dbName: "",
-    dbType: "", // No default selection
+    dbType: "",
+    connectionString: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,15 +29,20 @@ export default function DatabaseConnect() {
     setFormData((prevState) => ({
       ...prevState,
       dbType,
+      ...(dbType === "mongodb" && { username: "", password: "", dbName: "" }), // Reset unused fields for MongoDB
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate that a database type is selected
     if (!formData.dbType) {
       setError("Please select a database type");
+      return;
+    }
+
+    if (formData.dbType === "mongodb" && !formData.connectionString) {
+      setError("Please enter the MongoDB connection string");
       return;
     }
 
@@ -60,7 +66,6 @@ export default function DatabaseConnect() {
       }
 
       setSuccess("Database connection successful!");
-      // Optional: redirect after successful connection
       // setTimeout(() => router.push('/dashboard'), 2000);
     } catch (err) {
       setError(
@@ -91,21 +96,13 @@ export default function DatabaseConnect() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {error && (
             <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              </div>
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
           {success && (
             <div className="mb-4 bg-green-50 border-l-4 border-green-400 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <p className="text-sm text-green-700">{success}</p>
-                </div>
-              </div>
+              <p className="text-sm text-green-700">{success}</p>
             </div>
           )}
 
@@ -115,101 +112,107 @@ export default function DatabaseConnect() {
                 Database Type
               </label>
               <div className="flex space-x-4">
-                <button
-                  type="button"
-                  onClick={() => handleDbTypeSelect("postgres")}
-                  className={`flex-1 py-2 px-4 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                    formData.dbType === "postgres"
-                      ? "bg-indigo-600 text-white border-transparent"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  PostgreSQL
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDbTypeSelect("mysql")}
-                  className={`flex-1 py-2 px-4 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                    formData.dbType === "mysql"
-                      ? "bg-indigo-600 text-white border-transparent"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  MySQL
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDbTypeSelect("mongodb")}
-                  className={`flex-1 py-2 px-4 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                    formData.dbType === "mongodb"
-                      ? "bg-indigo-600 text-white border-transparent"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  MongoDB
-                </button>
+                {["postgres", "mysql", "mongodb"].map((db) => (
+                  <button
+                    key={db}
+                    type="button"
+                    onClick={() => handleDbTypeSelect(db)}
+                    className={`flex-1 py-2 px-4 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                      formData.dbType === db
+                        ? "bg-indigo-600 text-white border-transparent"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    {db.charAt(0).toUpperCase() + db.slice(1)}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Database Username
-              </label>
-              <div className="mt-1">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+            {formData.dbType === "mongodb" ? (
+              <div>
+                <label
+                  htmlFor="connectionString"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  MongoDB Connection String
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="connectionString"
+                    name="connectionString"
+                    type="text"
+                    required
+                    value={formData.connectionString}
+                    onChange={handleChange}
+                    placeholder="mongodb+srv://user:password@cluster.mongodb.net/dbname"
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div>
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Database Username
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="username"
+                      name="username"
+                      type="text"
+                      required
+                      value={formData.username}
+                      onChange={handleChange}
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Database Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Database Password
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
 
-            <div>
-              <label
-                htmlFor="dbName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Database Name
-              </label>
-              <div className="mt-1">
-                <input
-                  id="dbName"
-                  name="dbName"
-                  type="text"
-                  required
-                  value={formData.dbName}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
+                <div>
+                  <label
+                    htmlFor="dbName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Database Name
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="dbName"
+                      name="dbName"
+                      type="text"
+                      required
+                      value={formData.dbName}
+                      onChange={handleChange}
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
 
             <div>
               <button
