@@ -45,10 +45,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, Server, Lock } from "lucide-react";
+import { toast } from "sonner";
+import axios from "axios";
 
 const DatabaseConnectionForm = () => {
   const [selectedDatabase, setSelectedDatabase] = useState("");
   const [connectionString, setConnectionString] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const databases = [
     {
@@ -68,7 +71,7 @@ const DatabaseConnectionForm = () => {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(
       "Connecting to",
@@ -76,15 +79,37 @@ const DatabaseConnectionForm = () => {
       "with connection string:",
       connectionString
     );
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post('/api/database/connect', {
+        type: selectedDatabase,
+        connectionString: connectionString
+      });
+
+      toast.success('Database Connected Successfully', {
+        description: `Connected to ${selectedDatabase} database`
+      });
+
+      console.log(response.data);
+    } catch (error: any) {
+      toast.error('Connection Failed', {
+        description: error.response?.data?.message || 'Unable to connect to database'
+      });
+
+      console.error('Database connection error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-[400px] shadow-lg">
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <Card className="w-[400px]">
         <CardHeader>
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center justify-center">
             {/* <Database className="mr-2 h-6 w-6 text-blue-500" /> */}
-            Database Connection
+            <h2 className="text-2xl">Database Connection</h2>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -137,7 +162,7 @@ const DatabaseConnectionForm = () => {
             <Button
               type="submit"
               className="w-full"
-              disabled={!selectedDatabase || !connectionString}
+              //   disabled={!selectedDatabase || !connectionString}
             >
               Connect to Database
             </Button>
