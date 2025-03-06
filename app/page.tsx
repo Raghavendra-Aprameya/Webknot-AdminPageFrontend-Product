@@ -30,7 +30,7 @@ const DatabaseConnectionForm = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/database/connect", {
+      const response = await axios.post("http://localhost:8080/api/v1/db/connect", {
         connectionString,
         username,
         password,
@@ -57,7 +57,7 @@ const DatabaseConnectionForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
+    <div className="bg-[#F5F5F7] flex items-center justify-center min-h-screen bg-white">
       <Card className="w-[400px]">
         <CardHeader>
           <CardTitle className="flex items-center justify-center">

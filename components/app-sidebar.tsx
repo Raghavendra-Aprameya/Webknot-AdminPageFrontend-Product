@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Calendar, Home, Settings, Table } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Table, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
-
-const staticItems = [
-  { title: "Home", url: "#", icon: Home },
-  { title: "Calendar", url: "#", icon: Calendar },
-  { title: "Settings", url: "#", icon: Settings },
-];
-
-interface StaticMenuItem {
-  title: string;
-  url: string;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-}
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 interface AppSidebarProps {
   onTableSelect?: (tableName: string) => void;
@@ -32,7 +29,9 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get<string[]>("http://localhost:8080/api/v1/db/fetch-tables");
+        const response = await axios.get<string[]>(
+          "http://localhost:8080/api/v1/db/fetch-tables"
+        );
         setTableNames(response.data);
         setIsLoading(false);
         toast.success("Tables Loaded", {
@@ -41,7 +40,8 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
       } catch (error: any) {
         setIsLoading(false);
         toast.error("Failed to Load Tables", {
-          description: error.response?.data?.message || "Unable to fetch tables",
+          description:
+            error.response?.data?.message || "Unable to fetch tables",
         });
         console.error("Table fetching error:", error);
       }
@@ -56,51 +56,36 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarHeader className="flex flex-row items-center gap-3 p-4 border-b">
-          <img src="/logo.png" alt="Brand Logo" className="h-10 w-auto" />
-          <h1 className="text-lg font-medium">Brand Name</h1>
-        </SidebarHeader>
+    <Sidebar className="shadow-md min-h-screen border-r border-slate-200 bg-white">
+      <SidebarContent className="bg-white">
+        {/* Sidebar Header with Logo */}
+        <SidebarHeader className="bg-white flex flex-col items-center py-6 border-b border-slate-100 shadow-sm h-[93px]">
+  <Image src="/logo.png" alt="Brand Logo" width={180} height={10} />
+</SidebarHeader>
 
-        {/* Static Menu Group */}
-        {/* just for sample for now */}
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {staticItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          <SidebarGroupLabel className="px-4 text-slate-700 font-semibold text-xs uppercase tracking-wider mt-4">
+            Database Tables
+          </SidebarGroupLabel>
 
-        {/* Dynamic Tables Group */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Database Tables</SidebarGroupLabel>
           <SidebarGroupContent>
             {isLoading ? (
               <div className="flex items-center justify-center p-4">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                <span>Loading Tables...</span>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin text-indigo-600" />
+                <span className="text-slate-600 text-sm">Loading Tables...</span>
               </div>
             ) : (
               <SidebarMenu>
                 {tableNames.length === 0 ? (
-                  <div className="p-4 text-sm text-gray-500">No tables found</div>
+                  <div className="p-4 text-sm text-slate-500">No tables found</div>
                 ) : (
                   tableNames.map((table) => (
                     <SidebarMenuItem key={table}>
-                      <div onClick={() => handleTableClick(table)} className="flex items-center px-3 py-2 hover:bg-gray-100 rounded-md w-full cursor-pointer">
-                        <Table className="mr-2 h-4 w-4" />
+                      <div
+                        onClick={() => handleTableClick(table)}
+                        className="flex items-center px-4 py-3 text-slate-700 font-medium hover:bg-slate-100 rounded-lg w-full cursor-pointer transition-all duration-200"
+                      >
+                        <Table className="mr-3 h-5 w-5 text-black" />
                         <span>{table}</span>
                       </div>
                     </SidebarMenuItem>
