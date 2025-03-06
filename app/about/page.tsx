@@ -1,15 +1,12 @@
 import React from "react";
- // Importing Navbar component
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navbar Component */}
       <Navbar />
 
-      {/* About Section */}
       <div className="container mx-auto py-12 px-6">
         <h1 className="text-3xl font-bold text-center text-gray-800">About Our Platform</h1>
         <p className="text-lg text-gray-600 text-center mt-4">
@@ -17,7 +14,7 @@ export default function AboutPage() {
           to connect their databases and generate a fully functional admin panel dynamically.
         </p>
 
-        {/* Key Features */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <Card>
             <CardHeader>
