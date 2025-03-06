@@ -1,74 +1,47 @@
-"use client"
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Calendar, Home, Inbox, Search, Settings, Table } from "lucide-react";
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { Calendar, Home, Settings, Table } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 
-// Static menu items
+
 const staticItems = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  { title: "Home", url: "#", icon: Home },
+  { title: "Calendar", url: "#", icon: Calendar },
+  { title: "Settings", url: "#", icon: Settings },
 ];
 
-export function AppSidebar() {
-  const [tableName, setTableName] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface StaticMenuItem {
+  title: string;
+  url: string;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+}
+
+interface AppSidebarProps {
+  onTableSelect?: (tableName: string) => void;
+}
+
+export function AppSidebar({ onTableSelect }: AppSidebarProps) {
+  const [tableNames, setTableNames] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get("/api/database/tables");
-
-        setTableName(response.data);
+        const response = await axios.get<string[]>("http://localhost:8080/api/v1/db/fetch-tables");
+        setTableNames(response.data);
         setIsLoading(false);
-
         toast.success("Tables Loaded", {
           description: `Loaded ${response.data.length} tables`,
         });
-      } catch (error : any) {
+      } catch (error: any) {
         setIsLoading(false);
         toast.error("Failed to Load Tables", {
-          description:
-            error.response?.data?.message || "Unable to fetch tables",
+          description: error.response?.data?.message || "Unable to fetch tables",
         });
         console.error("Table fetching error:", error);
       }
@@ -77,15 +50,21 @@ export function AppSidebar() {
     fetchTables();
   }, []);
 
-
-  const handleTableClick = (tableName : string) => {
-    router.push(`/tables/${tableName}`);
+  const handleTableClick = (tableName: string) => {
+    router.push(`/dashboard/${tableName}`);
+    if (onTableSelect) onTableSelect(tableName);
   };
 
   return (
     <Sidebar>
       <SidebarContent>
+        <SidebarHeader className="flex flex-row items-center gap-3 p-4 border-b">
+          <img src="/logo.png" alt="Brand Logo" className="h-10 w-auto" />
+          <h1 className="text-lg font-medium">Brand Name</h1>
+        </SidebarHeader>
+
         {/* Static Menu Group */}
+        {/* just for sample for now */}
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -115,20 +94,15 @@ export function AppSidebar() {
               </div>
             ) : (
               <SidebarMenu>
-                {tableName.length === 0 ? (
-                  <div className="p-4 text-sm text-gray-500">
-                    No tables found
-                  </div>
+                {tableNames.length === 0 ? (
+                  <div className="p-4 text-sm text-gray-500">No tables found</div>
                 ) : (
-                  tableName.map((table) => (
+                  tableNames.map((table) => (
                     <SidebarMenuItem key={table}>
-                      <SidebarMenuButton asChild
-                        onClick={() => handleTableClick(table)}
-                        className="cursor-pointer"
-                      >
+                      <div onClick={() => handleTableClick(table)} className="flex items-center px-3 py-2 hover:bg-gray-100 rounded-md w-full cursor-pointer">
                         <Table className="mr-2 h-4 w-4" />
                         <span>{table}</span>
-                      </SidebarMenuButton>
+                      </div>
                     </SidebarMenuItem>
                   ))
                 )}
