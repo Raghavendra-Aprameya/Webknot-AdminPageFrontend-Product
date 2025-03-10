@@ -1,0 +1,8 @@
+{
+  "useCase": "Chatbot that generates use cases based on user input.",
+  "tableData": [
+    { "id": 1, "title": "Use Case 1", "description": "User authentication process." },
+    { "id": 2, "title": "Use Case 2", "description": "Product recommendation system." },
+    { "id": 3, "title": "Use Case 3", "description": "Automated customer support." }
+  ]
+}
