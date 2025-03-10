@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const DatabaseConnectionForm = () => {
   const [connectionString, setConnectionString] = useState("");
@@ -19,31 +19,39 @@ const DatabaseConnectionForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
-      "Connecting with connection string:",
-      connectionString,
-      "username:",
-      username,
-      "password:",
-      password
-    );
+  
+    if(!connectionString || !username || !password){
+      console.log("hello");
+      
+      toast("Fill all the required fields");
+      return;
+    }
     setIsLoading(true);
 
     try {
       const response = await axios.post("http://localhost:8080/api/v1/db/connect", {
-        connectionString,
+        connectionUrl: connectionString,
         username,
         password,
       });
 
-      toast.success("Database Connected Successfully", {
-        description: `Successfully connected to the database`,
-      });
+    
 
       console.log(response.data);
 
-  
-      router.push("/dashboard");
+      if(response.data.status==="success")
+      {
+        router.push("/dashboard");
+        toast.success("Database Connected Successfully", {
+          description: `Successfully connected to the database`,
+        });
+      }
+      else
+      {
+        toast.error("Connection Failed", {
+          description: `Unable to connect to the database`,
+        });
+      }
     } catch (error: any) {
       toast.error("Connection Failed", {
         description:
@@ -109,9 +117,7 @@ const DatabaseConnectionForm = () => {
             <Button
               type="submit"
               className="w-full"
-              // disabled={
-              //   !connectionString || !username || !password || isLoading
-              // }
+              
             >
               Connect to Database
             </Button>
