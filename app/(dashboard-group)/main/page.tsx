@@ -5,14 +5,8 @@ import axios from "axios";
 import Chatbot from "@/components/Chatbot";
 import UseCaseContainer from "../../../components/UseCaseContainer";
 import RightContainer from "../../../components/RightContainer";
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { UseCaseData } from "../../../types/user";
 
-
-interface UseCaseData {
-  use_case: string;
-  query: string;
-  user_input_columns: string[];
-}
 
 const MainContainer: React.FC = () => {
   const [data, setData] = useState<any>({});
@@ -23,25 +17,14 @@ const MainContainer: React.FC = () => {
 
   const [selectedUseCase, setSelectedUseCase] = useState(null);
 
-  const ckwe = (useCase) => {
-    console.log("Selected Use Case:", useCase);
-    setSelectedUseCase(useCase);
-
-    
-  };
-
   const handleSelectUseCase = async (useCase: string) => {
     setLoading(true);
     setError(null);
-
-    console.log(useCase);
 
     try {
       const response = await axios.get(
         `http://localhost:8000/api/v1/use_case/${useCase}`
       );
-
-      console.log(response.data);
 
       setUseCaseData(response.data);
     } catch (err: any) {
@@ -62,11 +45,6 @@ const MainContainer: React.FC = () => {
 
   return (
     <div className="bg-white shadow-md border border-gray-200 rounded-xl m-2">
-      {selectedUseCase ? (
-        <p>{selectedUseCase}</p>
-      ) : (
-        <p>No use case selected yet.</p>
-      )}
       <div className="flex h-screen p-3 gap-3">
         <div className="w-1/3 flex flex-col gap-3">
           <UseCaseContainer data={data} onSelectUseCase={handleSelectUseCase} />

@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { UseCaseData } from './../types/user';
 
 interface RightContainerProps {
   data: any;
+  useCaseData: UseCaseData;
 }
-
-interface UseCaseData {
-  use_case: string;
-  query: string;
-  user_input_columns: string[];
-}
-
 
 
 const RightContainer: React.FC<RightContainerProps> = ({
@@ -21,6 +17,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
 
   const [userInputs, setUserInputs] = useState<{ [key: string]: string }>({});
   const userInputColumns = useCaseData?.user_input_columns || [];
+  
 
 
   const handleInputChange = (column: string, value: string) => {
@@ -30,33 +27,35 @@ const RightContainer: React.FC<RightContainerProps> = ({
     }));
   };
 
+
+
   const handleSubmit = async () => {
+
+    const userInputValuesArray = userInputColumns.map((column) => userInputs[column] || "");
+
     const payload = {
       use_case: useCaseData?.use_case,
       query: useCaseData?.query,
-      user_input_columns: userInputColumns.length > 0 ? userInputs : {},
+      user_input_columns: userInputColumns.length > 0 ? userInputValuesArray : [],
     };
 
     console.log("Submitting payload:", payload);
 
     try {
-      const response = await axios.post("/api/execute-query", payload);
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/use_case/",
+        payload
+      );
       console.log("Response:", response.data);
-      // Handle response actions here
+
     } catch (error) {
       console.error("Error submitting data:", error);
-      // Handle error here
     }
   };
 
   return (
     <Card className="p-3 border rounded-lg shadow-md h-full">
-      {useCaseData ? (
-        <p>{useCaseData.use_case}</p>
-      ) : (
-        <p>No use case selected yet.</p>
-      )}
-
+      
       <div className="space-y-2">
         {useCaseData ? (
           <>
@@ -76,7 +75,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
                     <input
                       type="text"
                       className="border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500"
-                      value={userInputs[column]}
+                      value={userInputs[column] || ""}
                       onChange={(e) =>
                         handleInputChange(column, e.target.value)
                       }
@@ -87,7 +86,6 @@ const RightContainer: React.FC<RightContainerProps> = ({
               </div>
             )}
 
-            {/* Submit Button */}
             <Button
               className="mt-4"
               onClick={handleSubmit}
@@ -100,50 +98,6 @@ const RightContainer: React.FC<RightContainerProps> = ({
           <p>No use case selected yet.</p>
         )}
       </div>
-
-      <p className="text-md font-semibold mb-2">Dynamic UI Container</p>
-      <table className="min-w-full border-collapse rounded-md overflow-hidden">
-        <thead>
-          <tr className="bg-[#f1f5f9]">
-            <th className="px-6 py-3 border-b border-slate-200 text-left text-sm font-semibold text-slate-700">
-              ID
-            </th>
-            <th className="px-6 py-3 border-b border-slate-200 text-left text-sm font-semibold text-slate-700">
-              Title
-            </th>
-            <th className="px-6 py-3 border-b border-slate-200 text-left text-sm font-semibold text-slate-700">
-              Description
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
-          {data?.tableData?.map((item: any, index: number) => (
-            <tr
-              key={index}
-              className="hover:bg-slate-50 transition-all duration-200"
-            >
-              <td className="px-6 py-4 text-sm text-slate-700 border-b border-slate-100">
-                {item.id}
-              </td>
-              <td className="px-6 py-4 text-sm text-slate-700 border-b border-slate-100">
-                {item.title}
-              </td>
-              <td className="px-6 py-4 text-sm text-slate-700 border-b border-slate-100">
-                {item.description}
-              </td>
-            </tr>
-          )) || (
-            <tr>
-              <td
-                colSpan={3}
-                className="border border-gray-300 p-2 text-center text-gray-500"
-              >
-                Loading data...
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
     </Card>
   );
 };

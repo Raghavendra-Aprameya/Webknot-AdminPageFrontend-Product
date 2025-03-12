@@ -1,20 +1,14 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
+import { UseCaseData } from "../types/user";
 
 interface UseCaseContainerProps {
   data: any;
+  onSelectUseCase: any;
 }
-
-interface UseCaseData {
-  use_case: string;
-  query: string;
-  user_input_columns: string[];
-}
-
-
 
 const UseCaseContainer: React.FC<UseCaseContainerProps> = ({
   data,
@@ -42,26 +36,28 @@ const UseCaseContainer: React.FC<UseCaseContainerProps> = ({
   };
 
   return (
-    <Card className="p-2 shadow-md h-1/2">
-      <CardContent>
-        <p className="text-lg font-semibold">AI Generated Use Case</p>
-        <div className="mt-2 text-gray-600 text-sm overflow-y-auto flex-1 pr-2">
+    <Card className="p-2 shadow-md h-1/2 flex flex-col">
+      <CardContent className="flex flex-col h-full">
+        <p className="text-lg font-semibold mb-2">AI Generated Use Case</p>
+
+        {/* Scrollable list */}
+        <div className="overflow-y-auto pr-2 flex-1 max-h-64">
           {data && data.length > 0 ? (
-            <ul className="list-disc list-inside space-y-1">
-              {data.map((useCase, index) => (
+            <ul className="space-y-0">
+              {data.map((useCase: string, index: number) => (
                 <li
-                  className="cursor-pointer"
                   key={index}
+                  className="cursor-pointer py-2 px-1 hover:bg-gray-100 transition-colors border-b last:border-none"
                   onClick={() => {
                     onSelectUseCase(useCase);
                   }}
                 >
-                  {useCase}
+                  <span className="text-sm text-gray-800">{useCase}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            "Loading use cases..."
+            <p className="text-gray-500">Loading use cases...</p>
           )}
         </div>
       </CardContent>
