@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from "./ui/card";
 
 interface RightContainerProps {
   data: any;
@@ -6,11 +7,11 @@ interface RightContainerProps {
 
 const RightContainer: React.FC<RightContainerProps> = ({ data }) => {
   return (
-    <div className="p-4 border rounded-lg shadow-md h-full">
+    <Card className="p-3 border rounded-lg shadow-md h-full">
       <p className="text-md font-semibold mb-2">Dynamic UI Container</p>
       <table className="min-w-full border-collapse rounded-md overflow-hidden">
         <thead>
-          <tr className="bg-gray-100">
+          <tr className="bg-[#f1f5f9]">
             <th className="px-6 py-3 border-b border-slate-200 text-left text-sm font-semibold text-slate-700">
               ID
             </th>
@@ -50,7 +51,7 @@ const RightContainer: React.FC<RightContainerProps> = ({ data }) => {
           )}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 };
 

@@ -11,13 +11,13 @@ const MainContainer: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get("/example_data.json")
+      .get("http://localhost:8000/api/v1/use_cases")
       .then((response) => setData(response.data))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   return (
-    <div className="shadow-md border border-gray-200 rounded-xl m-2">
+    <div className="bg-white shadow-md border border-gray-200 rounded-xl m-2">
       <div className="flex h-screen p-3 gap-3">
         <div className="w-1/3 flex flex-col gap-3">
           <UseCaseContainer data={data} />
