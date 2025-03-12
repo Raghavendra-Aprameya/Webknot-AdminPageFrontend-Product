@@ -29,7 +29,7 @@ const Chatbot: React.FC = () => {
     <Card className="p-1 h-96 shadow-md flex flex-col">
       <CardContent className="flex flex-col flex-1 overflow-y-auto space-y-1">
         <p className="text-lg font-semibold">Chatbot</p>
-        <div className="flex-1 overflow-y-auto border p-2 rounded-md bg-gray-100">
+        <div className="flex-1 overflow-y-auto border p-2 rounded-md bg-[#f1f5f9]">
           {messages.map((msg, index) => (
             <div
               key={index}
@@ -47,6 +47,7 @@ const Chatbot: React.FC = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <Button onClick={handleSend}>Send</Button>
       </div>

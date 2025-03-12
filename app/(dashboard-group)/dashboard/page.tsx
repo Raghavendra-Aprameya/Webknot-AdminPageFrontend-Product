@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const Page = () => {
   return (
     <div className="flex max-h-screen h-screen bg-gray-100 overflow-hidden">
-      <AppSidebar />
 
       <div className="flex flex-col flex-1 overflow-hidden">
 
