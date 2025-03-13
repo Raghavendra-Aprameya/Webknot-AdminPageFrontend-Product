@@ -3,6 +3,9 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { UseCaseData } from "./../types/user";
+import { toast } from "sonner";
+
+
 
 interface RightContainerProps {
   data: any;
@@ -45,9 +48,23 @@ const RightContainer: React.FC<RightContainerProps> = ({
       );
       console.log("Response:", response.data);
       setResponseData(response.data);
+
+      toast.success("Data Updated Successfully", {
+        description: response?.data?.status || "Data Updated Successfully",
+      });
+      
+
     } catch (error) {
       console.error("Error submitting data:", error);
     }
+  };
+
+
+  const handleUpdate = () => {
+    // Reset inputs and response
+    setUserInputs({});
+    setResponseData(null);
+    console.log("Inputs and response cleared!");
   };
 
   return (
@@ -89,14 +106,23 @@ const RightContainer: React.FC<RightContainerProps> = ({
             >
               Submit
             </Button>
+            <Button
+              variant="outline"
+              onClick={handleUpdate}
+              disabled={!useCaseData}
+            >
+              Clear
+            </Button>
           </>
         ) : (
           <p>No use case selected yet.</p>
         )}
-
+        {responseData ?
         <pre className="bg-slate-100 p-2 rounded text-sm overflow-x-auto">
           {responseData ? JSON.stringify(responseData.status, null, 2) : ""}
         </pre>
+        : ""}
+
       </div>
     </Card>
   );
