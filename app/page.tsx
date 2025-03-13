@@ -117,7 +117,6 @@ const DatabaseConnectionForm = () => {
             <Button
               type="submit"
               className="w-full"
-              
             >
               Connect to Database
             </Button>

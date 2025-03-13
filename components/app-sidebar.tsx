@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Table, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Card } from "./ui/card";
 
 interface AppSidebarProps {
   onTableSelect?: (tableName: string) => void;
@@ -45,11 +46,11 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
   };
 
   return (
-    <div className="shadow-md min-h-screen border-r border-slate-200 bg-white w-64">
+    <Card className="shadow-md min-h-screen border-r border-slate-200 bg-white w-64">
       <div className="bg-white">
-        <div className="bg-white flex flex-col items-center py-6 border-b border-slate-100 shadow-sm h-[93px]">
+        {/* <div className="bg-white flex flex-col items-center py-6 border-b border-slate-100 shadow-sm h-[93px]">
           <Image src="/logo.png" alt="Brand Logo" width={180} height={10} />
-        </div>
+        </div> */}
 
         <div>
           <div className="px-4 text-slate-700 font-semibold text-xs uppercase tracking-wider mt-4">
@@ -86,7 +87,7 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 

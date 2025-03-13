@@ -2,60 +2,73 @@ import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import axios from "axios";
-import { UseCaseData } from './../types/user';
+import { UseCaseData } from "./../types/user";
+import { toast } from "sonner";
+
+
 
 interface RightContainerProps {
   data: any;
   useCaseData: UseCaseData;
 }
 
-
 const RightContainer: React.FC<RightContainerProps> = ({
   data,
-  useCaseData
+  useCaseData,
 }) => {
-
-  const [userInputs, setUserInputs] = useState<{ [key: string]: string }>({});
+  const [userInputs, setUserInputs] = useState<{ [key: string]: any }>({});
   const userInputColumns = useCaseData?.user_input_columns || [];
-  
 
+  const [responseData, setResponseData] = useState<any>(null);
 
-  const handleInputChange = (column: string, value: string) => {
+  const handleInputChange = (column: string, value: any) => {
     setUserInputs((prevInputs) => ({
       ...prevInputs,
       [column]: value,
     }));
   };
 
-
-
   const handleSubmit = async () => {
-
-    const userInputValuesArray = userInputColumns.map((column) => userInputs[column] || "");
+    const userInputValuesArray = userInputColumns.map(
+      (column) => userInputs[column] || ""
+    );
 
     const payload = {
       use_case: useCaseData?.use_case,
       query: useCaseData?.query,
-      user_input_columns: userInputColumns.length > 0 ? userInputValuesArray : [],
+      params: userInputColumns.length > 0 ? userInputValuesArray : [],
     };
 
     console.log("Submitting payload:", payload);
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/use_case/",
+        "http://localhost:8000/api/v1/update_data",
         payload
       );
       console.log("Response:", response.data);
+      setResponseData(response.data);
+
+      toast.success("Data Updated Successfully", {
+        description: response?.data?.status || "Data Updated Successfully",
+      });
+      
 
     } catch (error) {
       console.error("Error submitting data:", error);
     }
   };
 
+
+  const handleUpdate = () => {
+    // Reset inputs and response
+    setUserInputs({});
+    setResponseData(null);
+    console.log("Inputs and response cleared!");
+  };
+
   return (
     <Card className="p-3 border rounded-lg shadow-md h-full">
-      
       <div className="space-y-2">
         {useCaseData ? (
           <>
@@ -93,10 +106,23 @@ const RightContainer: React.FC<RightContainerProps> = ({
             >
               Submit
             </Button>
+            <Button
+              variant="outline"
+              onClick={handleUpdate}
+              disabled={!useCaseData}
+            >
+              Clear
+            </Button>
           </>
         ) : (
           <p>No use case selected yet.</p>
         )}
+        {responseData ?
+        <pre className="bg-slate-100 p-2 rounded text-sm overflow-x-auto">
+          {responseData ? JSON.stringify(responseData.status, null, 2) : ""}
+        </pre>
+        : ""}
+
       </div>
     </Card>
   );
