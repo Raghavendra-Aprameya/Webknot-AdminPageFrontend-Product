@@ -41,7 +41,7 @@ const UseCaseContainer: React.FC<UseCaseContainerProps> = ({
         <p className="text-lg font-semibold mb-2">AI Generated Use Case</p>
 
         {/* Scrollable list */}
-        <div className="overflow-y-auto pr-2 flex-1 max-h-64">
+        <div className="overflow-y-auto pr-2 flex-1 max-h-64 thin-scrollbar">
           {data && data.length > 0 ? (
             <ul className="space-y-0">
               {data.map((useCase: string, index: number) => (

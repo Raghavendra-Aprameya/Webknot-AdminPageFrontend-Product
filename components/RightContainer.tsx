@@ -5,8 +5,6 @@ import axios from "axios";
 import { UseCaseData } from "./../types/user";
 import { toast } from "sonner";
 
-
-
 interface RightContainerProps {
   data: any;
   useCaseData: UseCaseData;
@@ -52,19 +50,85 @@ const RightContainer: React.FC<RightContainerProps> = ({
       toast.success("Data Updated Successfully", {
         description: response?.data?.status || "Data Updated Successfully",
       });
-      
-
     } catch (error) {
       console.error("Error submitting data:", error);
     }
   };
 
-
   const handleUpdate = () => {
-    // Reset inputs and response
     setUserInputs({});
     setResponseData(null);
     console.log("Inputs and response cleared!");
+  };
+
+  // Function to render table if execution_result is an array of objects
+  const renderTable = (executionResult: any[]) => {
+    if (executionResult.length === 0) {
+      return <p>No data found.</p>;
+    }
+
+    const headers = Object.keys(executionResult[0]);
+
+    return (
+      <div className="overflow-x-auto mt-4 overflow-y-auto pr-2 flex-1 max-h-85 thin-scrollbar">
+        <table className="min-w-full border border-gray-300 text-sm">
+          <thead>
+            <tr className="bg-gray-100">
+              {headers.map((header, idx) => (
+                <th
+                  key={idx}
+                  className="px-4 py-2 border border-gray-300 text-left font-medium"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {executionResult.map((row, idx) => (
+              <tr key={idx} className="odd:bg-white even:bg-gray-50">
+                {headers.map((header, i) => (
+                  <td key={i} className="px-4 py-2 border border-gray-300">
+                    {row[header]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  // Function to determine how to display execution_result
+  const renderExecutionResult = () => {
+    const executionResult = responseData?.execution_result;
+
+    if (!executionResult) return null;
+
+    // Case 1: It's an array of objects (table)
+    if (Array.isArray(executionResult) && executionResult.length > 0) {
+      const isObjectArray = typeof executionResult[0] === "object";
+      if (isObjectArray) {
+        return renderTable(executionResult);
+      }
+    }
+
+    // Case 2: It's a message (string or no valid data)
+    if (typeof executionResult === "string") {
+      return (
+        <p className="mt-4 p-2 bg-slate-100 rounded text-sm">
+          {executionResult}
+        </p>
+      );
+    }
+
+    // Default fallback if empty or unknown format
+    return (
+      <p className="mt-4 p-2 bg-slate-100 rounded text-sm">
+        No data available.
+      </p>
+    );
   };
 
   return (
@@ -115,17 +179,25 @@ const RightContainer: React.FC<RightContainerProps> = ({
             </Button>
           </>
         ) : (
-          <p>No use case selected yet.</p>
-        )}
-        {responseData ?
-        <pre className="bg-slate-100 p-2 rounded text-sm overflow-x-auto">
-          {responseData ? JSON.stringify(responseData.status, null, 2) : ""}
-        </pre>
-        : ""}
+          <div className="flex items-center justify-center h-full w-full">
+            <h1 className="text-3xl font-semibold text-gray-700">
+              Please select a usecase to Continue
+            </h1>
+          </div>
 
+        )}
+
+        {/* Response section */}
+        {responseData && (
+          <div className="mt-4">
+            <h3 className="text-md font-semibold mb-2">Response:</h3>
+            {renderExecutionResult()}
+          </div>
+        )}
       </div>
     </Card>
   );
 };
 
 export default RightContainer;
+
