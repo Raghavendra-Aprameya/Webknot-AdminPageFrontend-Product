@@ -21,6 +21,7 @@ export default function Register() {
     }
     try {
       await register({ username, email, password });
+      console.log("Registration successful! You are now logged in.");
     } catch (error) {
       console.error("Error during registration", error);
       alert("An error occurred. Please try again.");

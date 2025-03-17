@@ -3,10 +3,14 @@
 import MainSidebar from "../../components/MainSidebar";
 import { Card } from "../../components/ui/card";
 import MainNavbar from "../../components/MainNavbar";
+import { AuthProvider } from "../../context/AuthProvider";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
+    <ProtectedRoute>
+    
     <div className="bg-[#f1f5f9] shadow-md h-[100vh] flex flex-row">
       <MainSidebar />
 
@@ -16,6 +20,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <main className="max-h-[88vh] overflow-auto -mt-6">{children}</main>
         </Card>
       </div>
+      
     </div>
+    </ProtectedRoute>
   );
 }

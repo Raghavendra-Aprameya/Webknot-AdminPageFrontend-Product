@@ -275,12 +275,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 // UI Components
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -294,6 +289,7 @@ import {
 } from "@/context/OperationContext";
 
 const CrudOperationsPage: React.FC = () => {
+  // Available operations fetched from API
   const [operations, setOperations] = useState<
     Record<OperationCategory, string[]>
   >({
@@ -309,15 +305,13 @@ const CrudOperationsPage: React.FC = () => {
   >({});
   const [userOperations, setUserOperations] = useState<Operation[]>([]);
   const [newUserOperation, setNewUserOperation] = useState<string>("");
-  const [finalSelectedUseCases, setFinalSelectedUseCases] = useState<
-    Operation[]
-  >([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
-  const { setSelectedOperations } = useOperationContext();
 
-  // Fetch use cases from API
+  // Only use selectedOperations and setSelectedOperations from context
+  const { selectedOperations, setSelectedOperations } = useOperationContext();
+
   const fetchUseCases = async () => {
     setLoading(true);
     try {
@@ -333,6 +327,8 @@ const CrudOperationsPage: React.FC = () => {
         Update: data.Update || [],
         Delete: data.Delete || [],
       }));
+
+      // No longer storing all useCases in context
     } catch (error) {
       console.error("Failed to fetch use cases:", error);
     } finally {
@@ -375,10 +371,11 @@ const CrudOperationsPage: React.FC = () => {
     }
   };
 
-  // Collect and store all selected operations into state
+  // Collect and store all selected operations directly into context
   const handleAddSelectedOperations = () => {
     const selectedUseCases: Operation[] = [];
 
+    // Collect from standard operations
     (Object.entries(operations) as [OperationCategory, string[]][]).forEach(
       ([category, cases]) => {
         cases.forEach((useCase, index) => {
@@ -389,34 +386,33 @@ const CrudOperationsPage: React.FC = () => {
       }
     );
 
+    // Collect from user operations
     userOperations.forEach((op, index) => {
       if (selectedOperationsMap[`user-${index}`]) {
         selectedUseCases.push(op);
       }
     });
 
-    setFinalSelectedUseCases(selectedUseCases);
+    // Update context with all selected operations
+    setSelectedOperations([...selectedOperations, ...selectedUseCases]);
   };
 
-  // Remove operation from selected operations list
+  // Remove operation from selected operations context
   const handleRemoveSelectedUseCase = (indexToRemove: number) => {
-    setFinalSelectedUseCases((prev) =>
+    setSelectedOperations((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
   };
 
-  // Navigate to /main and pass selected operations via context
+  // Navigate to /main when ready
   const handleNavigate = () => {
-    setSelectedOperations(finalSelectedUseCases);
     router.push("/main");
   };
 
   return (
     <div className="container mx-auto p-4 max-h-screen">
       <div className="flex justify-between p-2">
-        <h1 className="text-2xl font-semibold mb-4">
-          AI Generated UseCases
-        </h1>
+        <h1 className="text-2xl font-semibold mb-4">AI Generated UseCases</h1>
         <Button onClick={fetchUseCases} disabled={loading}>
           {loading ? "Refreshing..." : "Refresh Usecases"}
         </Button>
@@ -527,23 +523,21 @@ const CrudOperationsPage: React.FC = () => {
                 Add Selected
               </Button>
 
-              {finalSelectedUseCases.length > 0 ? (
+              {selectedOperations.length > 0 ? (
                 <div className="border rounded-md p-3 text-sm space-y-2">
-                  {finalSelectedUseCases.map((useCase, index) => (
+                  {selectedOperations.map((useCase, index) => (
                     <div
                       key={index}
                       className="flex justify-between items-start gap-2"
                     >
                       <div>
-                        <span className="font-medium">
-                          {useCase.category}:
-                        </span>{" "}
+                        <span className="font-medium">{useCase.category}:</span>{" "}
                         <p className="inline">{useCase.text}</p>
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-5 w-5 text-red-500 hover:bg-red-100"
+                        className="h-6 w-6 p-1"
                         onClick={() => handleRemoveSelectedUseCase(index)}
                       >
                         <X className="h-4 w-4" />
@@ -552,21 +546,20 @@ const CrudOperationsPage: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">
-                  No operations selected yet.
-                </p>
+                <p className="text-gray-500">No operations selected yet.</p>
               )}
-
-              {/* Navigate Button */}
-              <Button
-                variant="outline"
-                onClick={handleNavigate}
-                className="cursor-pointer p-4 w-full mt-5"
-              >
-                Launch Admin Panel
-              </Button>
             </CardContent>
           </Card>
+
+          <div className="mt-4 flex gap-3 justify-end">
+            <Button
+              variant="outline"
+              onClick={handleNavigate}
+              className="w-full md:w-auto cursor-pointer"
+            >
+              Launch Dashboard
+            </Button>
+          </div>
         </div>
       </div>
     </div>

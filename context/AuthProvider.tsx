@@ -31,19 +31,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (credentials: { email: string; password: string }) => {
-    const res = await axios.post("http://localhost:8080/login", credentials);
-    localStorage.setItem("token", res.data.token);
-    setToken(res.data.token);
-    setUser(jwtDecode<LoginUser>(res.data.token));
+  const login = async (credentials: { username: string; password: string }) => {
+    const res = await axios.post(
+      "http://localhost:8080/api/v1/auth/login",
+      credentials
+    );
+    console.log(res);
+    localStorage.setItem("token", res.data);
+    setToken(res.data);
+    setUser(jwtDecode<LoginUser>(res.data));
   };
 
 
   const register = async (credentials: RegisterUser) => {
-    const res = await axios.post("http://localhost:8080/register", credentials);
-    localStorage.setItem("token", res.data.token);
-    setToken(res.data.token);
-    setUser(jwtDecode(res.data.token));
+    const res = await axios.post("http://localhost:8080/api/v1/auth/signup", credentials);
+    console.log(res);
+    localStorage.setItem("token", res.data);
+    setToken(res.data);
+    setUser(jwtDecode(res.data));
   };
 
 

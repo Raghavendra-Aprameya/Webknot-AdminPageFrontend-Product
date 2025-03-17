@@ -15,7 +15,7 @@ export interface Operation {
   category: OperationCategory;
 }
 
-// Context State Interface
+// Context State Interface - remove useCases from context
 interface OperationContextType {
   selectedOperations: Operation[];
   setSelectedOperations: (operations: Operation[]) => void;
@@ -33,7 +33,10 @@ export const OperationProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <OperationContext.Provider
-      value={{ selectedOperations, setSelectedOperations }}
+      value={{
+        selectedOperations,
+        setSelectedOperations,
+      }}
     >
       {children}
     </OperationContext.Provider>
