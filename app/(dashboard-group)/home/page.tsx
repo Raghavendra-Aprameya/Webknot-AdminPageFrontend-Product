@@ -40,7 +40,7 @@ const HomePage = () => {
               Securely link your data source with end-to-end encryption and zero
               configuration.
               <p className="text-sm text-gray-500 pt-2">
-                Supports MySQL, PostgreSQL, MongoDB, and 10+ other database
+                Supports MySQL, PostgreSQL, MongoDB, and other database
                 types.
               </p>
               <div className="pt-4">
@@ -87,14 +87,14 @@ const HomePage = () => {
             <div className="flex items-center mb-1">
               <LayoutDashboard className="w-8 h-8 text-green-500 mr-3" />
               <CardTitle className="text-lg">
-                Craft Beautiful Dashboards
+                Craft Dashboards
               </CardTitle>
             </div>
             <CardDescription className="text-sm">
-              Drag-and-drop interface to build professional analytics displays
+              Intuitive interface to build professional analytics displays
               in minutes.
               <p className="text-sm text-gray-500 pt-2">
-                Choose from 20+ chart types and visualization tools to represent
+                Tools to represent
                 your data perfectly.
               </p>
               <div className="pt-4">
