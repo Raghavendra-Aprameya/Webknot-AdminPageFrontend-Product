@@ -1,8 +1,10 @@
 import React from 'react'
 import { Bell } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '../context/AuthProvider';
 
 const MainNavbar = () => {
+  const { user } = useAuth();
   return (
     <div className="flex justify-between items-center p-3 border-b-3 border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="flex justify-center items-center">
@@ -17,9 +19,15 @@ const MainNavbar = () => {
           <Bell size={20} className="text-gray-600 dark:text-gray-300" />
         </button>
         <Link href="/login">
-          <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
-            Login
-          </button>
+          {user ? (
+            <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
+              Logout
+            </button>
+          ) : (
+            <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
+              Login
+            </button>
+          )}
         </Link>
       </div>
     </div>
