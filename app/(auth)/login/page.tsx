@@ -6,15 +6,15 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
 export default function Login() {
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ email, password });
-    router.push("/dashboard");
+    await login({ username, password });
+    router.push("/home");
   };
 
   return (
@@ -25,10 +25,10 @@ export default function Login() {
       >
         <h2 className="text-xl font-semibold mb-4">Login</h2>
         <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="w-full mb-3 p-2 border rounded"
           required
         />
