@@ -7,6 +7,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+
 import {
   Database,
   ListOrdered,
@@ -44,7 +46,7 @@ const HomePage = () => {
                 types.
               </p>
               <div className="pt-4">
-                <Link href="/connect-db" className="w-full">
+                <Link href="/dbconnect" className="w-full">
                   <Button className="w-full group">
                     Connect Database
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -70,7 +72,7 @@ const HomePage = () => {
                 operations for your business.
               </p>
               <div className="pt-4">
-                <Link href="/usecases" className="w-full">
+                <Link href="/usecase" className="w-full">
                   <Button className="w-full group">
                     Explore Use Cases
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -98,7 +100,7 @@ const HomePage = () => {
                 your data perfectly.
               </p>
               <div className="pt-4">
-                <Link href="/dashboard-builder" className="w-full">
+                <Link href="/main" className="w-full">
                   <Button className="w-full group">
                     Create Dashboard
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -124,7 +126,7 @@ const HomePage = () => {
                 at every step.
               </p>
               <div className="pt-4">
-                <Link href="/crud-operations" className="w-full">
+                <Link href="/dashboard" className="w-full">
                   <Button className="w-full group">
                     Access Data Tools
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

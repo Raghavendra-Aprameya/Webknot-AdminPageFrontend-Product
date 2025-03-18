@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
+import Link from "next/link";
 
 export default function Register() {
   const [username, setUsername] = useState<string>("");
@@ -67,6 +68,15 @@ export default function Register() {
         <Button variant="default" type="submit" className="w-full">
           Register
         </Button>
+        <p className="text-sm text-gray-600 text-center">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-black font-semibold hover:underline"
+          >
+            Login{" "}
+          </Link>{" "}
+        </p>
       </form>
     </div>
   );

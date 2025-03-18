@@ -18,9 +18,13 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
 
   useEffect(() => {
     const fetchTables = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get<string[]>(
-          "http://localhost:8080/api/v1/db/fetch-tables"
+          "http://localhost:8080/api/v1/db/fetch-tables",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         setTableNames(response.data);
         setIsLoading(false);

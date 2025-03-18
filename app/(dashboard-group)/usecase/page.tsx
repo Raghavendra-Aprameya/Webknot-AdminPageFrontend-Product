@@ -5,14 +5,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-// UI Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X, PlusCircle, Check } from "lucide-react";
 
-// Context
 import {
   useOperationContext,
   Operation,
@@ -40,7 +38,6 @@ const CrudOperationsPage: React.FC = () => {
 
   const router = useRouter();
 
-  // Only use selectedOperations and setSelectedOperations from context
   const { selectedOperations, setSelectedOperations } = useOperationContext();
 
   const fetchUseCases = async () => {
@@ -291,7 +288,7 @@ const CrudOperationsPage: React.FC = () => {
               onClick={handleNavigate}
               className="w-full md:w-auto cursor-pointer"
             >
-              Launch Dashboard
+              Launch Admin Panel
             </Button>
           </div>
         </div>

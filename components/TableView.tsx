@@ -17,9 +17,14 @@ export default function TableView({ tableName }: TableViewProps) {
   const fetchTableData = async () => {
     setIsLoading(true);
     setError(null);
+    const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/db/fetch-data/${tableName}`);
+      const response = await axios.get(`http://localhost:8080/api/v1/db/fetch-data/${tableName}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log(response);
       setTableData(response.data);
     } catch (err) {
