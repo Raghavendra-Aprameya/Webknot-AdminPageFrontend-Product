@@ -44,26 +44,32 @@
 //     setLoading(true);
 //     try {
 //       const response = await axios.get(
-//         "http://localhost:8080/api/v1/fastapi/use-cases",
-//         {
-//           headers: { Authorization: `Bearer ${token}` },
-//         }
+//         "http://127.0.0.1:8000/api/v1/use_cases"
 //       );
 //       const data = response.data;
-
-//       setOperations((prev) => ({
-//         ...prev,
-//         Create: data.Create || [],
-//         Read: data.Read || [],
-//         Update: data.Update || [],
-//         Delete: data.Delete || [],
-//       }));
+//       console.log(data);
+//       if (data.status === "success" && data.use_cases_result) {
+//         setOperations({
+//           Create:
+//             data.use_cases_result.create.map((item: any) => item.use_case) ||
+//             [],
+//           Read:
+//             data.use_cases_result.read.map((item: any) => item.use_case) || [],
+//           Update:
+//             data.use_cases_result.update.map((item: any) => item.use_case) ||
+//             [],
+//           Delete:
+//             data.use_cases_result.delete.map((item: any) => item.use_case) ||
+//             [],
+//         });
+//       }
 //     } catch (error) {
 //       console.error("Failed to fetch use cases:", error);
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
+
 
 //   useEffect(() => {
 //     fetchUseCases();
@@ -158,7 +164,7 @@
 //             <>
 //               {/* Generated UseCases */}
 //               {(Object.entries(operations) as [OperationCategory, string[]][])
-//                 .slice(0, 3)
+//                 .slice(0, 4)
 //                 .map(([category, useCases]) => (
 //                   <section key={category}>
 //                     <h2 className="text-lg font-medium mb-1">
@@ -276,8 +282,11 @@
 //                 Connect your database to unlock AI-generated use cases tailored
 //                 to your schema.
 //               </p>
-//               <Button variant="outline" className="mx-auto bg-[#f1f5f9] cursor-pointer text-black">
-//                 Connect Database 
+//               <Button
+//                 variant="outline"
+//                 className="mx-auto bg-[#f1f5f9] cursor-pointer text-black"
+//               >
+//                 Connect Database
 //               </Button>
 //             </div>
 //           )}
@@ -349,6 +358,7 @@
 
 
 
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -360,13 +370,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, PlusCircle, Check, DatabaseIcon } from "lucide-react";
+import { X, PlusCircle, Check } from "lucide-react";
 import {
   useOperationContext,
   Operation,
   OperationCategory,
 } from "@/context/OperationContext";
 import { useDbContext } from "@/context/DbContext";
+import { toast } from "sonner";
 
 const CrudOperationsPage: React.FC = () => {
   const [operations, setOperations] = useState<
@@ -388,15 +399,18 @@ const CrudOperationsPage: React.FC = () => {
   const { dbConnected } = useDbContext();
   const router = useRouter();
 
-  const { selectedOperations, setSelectedOperations } = useOperationContext();
+  const {
+    selectedOperations,
+    setSelectedOperations,
+    finalSelectedUsecase,
+    setFinalSelectedUsecase,
+  } = useOperationContext();
 
   const fetchUseCases = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
     try {
-      const response = await axios.get(
-        "/example_data.json"
-      );
+      const response = await axios.get("/example_data.json");
       const data = response.data.data;
       console.log(data);
       if (data.status === "success" && data.use_cases_result) {
@@ -421,12 +435,10 @@ const CrudOperationsPage: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     fetchUseCases();
   }, []);
 
-  // Handle checkbox changes for fetched operations
   const handleSelectChange = (
     value: boolean,
     category: OperationCategory,
@@ -438,7 +450,6 @@ const CrudOperationsPage: React.FC = () => {
     }));
   };
 
-  // Handle checkbox changes for user-added operations
   const handleUserSelectChange = (value: boolean, index: number) => {
     setSelectedOperationsMap((prev) => ({
       ...prev,
@@ -446,51 +457,150 @@ const CrudOperationsPage: React.FC = () => {
     }));
   };
 
-  // Add a user-defined operation
-  const handleAddUserOperation = () => {
-    if (newUserOperation.trim()) {
-      setUserOperations((prev) => [
-        ...prev,
-        { text: newUserOperation.trim(), category: "User" },
-      ]);
-      setNewUserOperation("");
+  // const handleAddUserOperation = () => {
+  //   if (newUserOperation.trim()) {
+  //     setUserOperations((prev) => [
+  //       ...prev,
+  //       { text: newUserOperation.trim(), category: "User" },
+  //     ]);
+  //     setNewUserOperation("");
+  //   }
+  // };
+
+
+  const handleAddUserOperation = async () => {
+    if (!newUserOperation.trim()) return;
+
+    // Show validation message
+    toast.loading("Validating your use case...", { id: "validate-toast" });
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/execute_use_case",
+        {
+          use_case: newUserOperation.trim(),
+        }
+      );
+
+      const data = response.data;
+
+      if (data.valid) {
+        // Add to user operations and final selected use cases
+        const newOperation: Operation = {
+          use_case_id: crypto.randomUUID(),
+          use_case: data.use_case,
+          query: data.query,
+          user_input_columns: data.user_input_columns,
+          category: "User",
+        };
+
+        setUserOperations((prev) => [...prev, newOperation]);
+        setFinalSelectedUsecase((prev) => [...prev, newOperation]);
+
+        toast.success("Use case added successfully!", { id: "validate-toast" });
+      } else {
+        // Show error message if invalid
+        toast.error("Invalid use case: " + data.query, {
+          id: "validate-toast",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to validate use case:", error);
+      toast.error("Something went wrong! Try again.", { id: "validate-toast" });
+    } finally {
+      setNewUserOperation(""); // Clear input
     }
   };
 
-  // Collect and store all selected operations directly into context
+
+
+  // const handleAddSelectedOperations = () => {
+  //   const selectedUseCases: Operation[] = [];
+  //   const finalUseCases: any[] = [];
+
+  //   (Object.entries(operations) as [OperationCategory, string[]][]).forEach(
+  //     ([category, cases]) => {
+  //       cases.forEach((useCase, index) => {
+  //         if (selectedOperationsMap[`${category}-${index}`]) {
+  //           const useCaseId = crypto.randomUUID();
+  //           selectedUseCases.push({ category, text: useCase });
+  //           finalUseCases.push({
+  //             use_case_id: useCaseId,
+  //             use_case: useCase,
+  //             query: "Generated SQL query for " + useCase,
+  //             user_input_columns: ["Column1", "Column2"],
+  //           });
+  //         }
+  //       });
+  //     }
+  //   );
+
+  //   userOperations.forEach((op, index) => {
+  //     if (selectedOperationsMap[`user-${index}`]) {
+  //       const useCaseId = crypto.randomUUID();
+  //       selectedUseCases.push(op);
+  //       finalUseCases.push({
+  //         use_case_id: useCaseId,
+  //         use_case: op.text,
+  //         query: "Generated SQL query for " + op.text,
+  //         user_input_columns: ["Column1", "Column2"],
+  //       });
+  //     }
+  //   });
+
+  //   setSelectedOperations([...selectedOperations, ...selectedUseCases]);
+  //   setFinalSelectedUsecase([...finalSelectedUsecase, ...finalUseCases]);
+  // };
+
+
+
   const handleAddSelectedOperations = () => {
     const selectedUseCases: Operation[] = [];
 
-    // Collect from standard operations
     (Object.entries(operations) as [OperationCategory, string[]][]).forEach(
       ([category, cases]) => {
         cases.forEach((useCase, index) => {
           if (selectedOperationsMap[`${category}-${index}`]) {
-            selectedUseCases.push({ category, text: useCase });
+            selectedUseCases.push({
+              category,
+              text: useCase,
+            });
           }
         });
       }
     );
 
-    // Collect from user operations
     userOperations.forEach((op, index) => {
       if (selectedOperationsMap[`user-${index}`]) {
         selectedUseCases.push(op);
       }
     });
 
-    // Update context with all selected operations
     setSelectedOperations([...selectedOperations, ...selectedUseCases]);
+
+    // Ensure finalSelectedUsecase is always an array before spreading
+    setFinalSelectedUsecase([
+      ...(finalSelectedUsecase ?? []), // Ensure it's an array before spreading
+      ...selectedUseCases.map((useCase) => ({
+        use_case_id: crypto.randomUUID(), // Generate a UUID for each
+        use_case: useCase.text,
+        query: "", // You might want to generate or fetch a query for this
+        user_input_columns: [], // Adjust based on your data structure
+      })),
+    ]);
   };
 
-  // Remove operation from selected operations context
+
+
   const handleRemoveSelectedUseCase = (indexToRemove: number) => {
     setSelectedOperations((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
+    setFinalSelectedUsecase((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
   };
 
-  // Navigate to /main when ready
   const handleNavigate = () => {
     router.push("/main");
   };
@@ -702,7 +812,3 @@ const CrudOperationsPage: React.FC = () => {
 };
 
 export default CrudOperationsPage;
-
-
-
-

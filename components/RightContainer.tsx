@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { useUseCase } from "@/context/UseCaseContext";
+import { useOperationContext } from "../context/OperationContext";
 
 interface RightContainerProps {
   
@@ -17,7 +18,15 @@ const RightContainer: React.FC<RightContainerProps> = () => {
   const [useCaseData, setUseCaseData] = useState<any>(null);
   const [responseData, setResponseData] = useState<any>(null);
 
+  const {
+      selectedOperations,
+      setSelectedOperations,
+      finalSelectedUsecase,
+      setFinalSelectedUsecase,
+    } = useOperationContext();
+
   useEffect(() => {
+    console.log(finalSelectedUsecase);
     if (useCase) {
       const fetchUseCaseData = async () => {
         const token = localStorage.getItem("token");

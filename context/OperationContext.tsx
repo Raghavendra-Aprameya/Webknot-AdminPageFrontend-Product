@@ -1,56 +1,3 @@
-// "use client";
-
-// import React, { createContext, useContext, useState, ReactNode } from "react";
-
-// // Define the types
-// export type OperationCategory =
-//   | "Create"
-//   | "Read"
-//   | "Update"
-//   | "Delete"
-//   | "User";
-
-// export interface Operation {
-//   text: string;
-//   category: OperationCategory;
-// }
-
-// // Context State Interface - remove useCases from context
-// interface OperationContextType {
-//   selectedOperations: Operation[];
-//   setSelectedOperations: (operations: Operation[]) => void;
-// }
-
-// // Create the Context with default values
-// const OperationContext = createContext<OperationContextType>({
-//   selectedOperations: [],
-//   setSelectedOperations: () => {},
-// });
-
-// // Provider component
-// export const OperationProvider = ({ children }: { children: ReactNode }) => {
-//   const [selectedOperations, setSelectedOperations] = useState<Operation[]>([]);
-
-//   return (
-//     <OperationContext.Provider
-//       value={{
-//         selectedOperations,
-//         setSelectedOperations,
-//       }}
-//     >
-//       {children}
-//     </OperationContext.Provider>
-//   );
-// };
-
-// // Custom hook to use context easily
-// export const useOperationContext = () => useContext(OperationContext);
-
-
-
-
-
-
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
@@ -73,6 +20,8 @@ export interface Operation {
 interface OperationContextType {
   selectedOperations: Operation[];
   setSelectedOperations: (operations: Operation[]) => void;
+  finalSelectedUsecase: Operation[]; // Add finalSelectedUsecase
+  setFinalSelectedUsecase: (usecases: Operation[]) => void; // Setter function
 }
 
 const OperationContext = createContext<OperationContextType | undefined>(
@@ -81,10 +30,18 @@ const OperationContext = createContext<OperationContextType | undefined>(
 
 export const OperationProvider = ({ children }: { children: ReactNode }) => {
   const [selectedOperations, setSelectedOperations] = useState<Operation[]>([]);
+  const [finalSelectedUsecase, setFinalSelectedUsecase] = useState<Operation[]>(
+    []
+  ); // Initialize state
 
   return (
     <OperationContext.Provider
-      value={{ selectedOperations, setSelectedOperations }}
+      value={{
+        selectedOperations,
+        setSelectedOperations,
+        finalSelectedUsecase, // Provide it in context
+        setFinalSelectedUsecase, // Provide setter function
+      }}
     >
       {children}
     </OperationContext.Provider>
