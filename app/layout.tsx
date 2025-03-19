@@ -5,7 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "../context/AuthProvider";
 import { OperationProvider } from "../context/OperationContext";
-import { UseCaseProvider } from "./../context/UseCaseContext";
+import { SelectedUseCaseProvider } from "../context/SelectedUseCaseContext";
 import { DbProvider } from "@/context/DbContext";
 
 const geistSans = Geist({
@@ -36,10 +36,10 @@ export default function RootLayout({
         <AuthProvider>
           <DbProvider>
             <OperationProvider>
-              <UseCaseProvider>
+              <SelectedUseCaseProvider>
                 <Toaster />
                 {children}
-              </UseCaseProvider>
+              </SelectedUseCaseProvider>
             </OperationProvider>
           </DbProvider>
         </AuthProvider>
