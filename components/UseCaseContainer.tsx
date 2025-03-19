@@ -72,9 +72,11 @@ const UseCaseContainer: React.FC<{
   };
 
   return (
-    <Card className="p-2 shadow-md h-1/2 flex flex-col">
+    <Card className="p-2 shadow-md h-full flex flex-col ml-0.5">
       <CardContent className="flex flex-col h-full">
-        <p className="text-lg font-semibold mb-2">Selected Use Cases</p>
+        <div className="border-b-2 pt-1">
+          <p className="text-lg font-semibold mb-2">Selected Use Cases</p>
+        </div>
 
         <div className="overflow-y-auto pr-2 flex-1 max-h-64 thin-scrollbar">
           {selectedUseCases && selectedUseCases.length > 0 ? (
@@ -90,8 +92,9 @@ const UseCaseContainer: React.FC<{
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 text-sm">
-              No selected use cases available.
+            <p className="text-gray-500 text-sm h-full flex justify-center items-center">
+              No use cases selected yet. Build your perfect admin panel by
+              choosing the features that fit your workflow!
             </p>
           )}
         </div>

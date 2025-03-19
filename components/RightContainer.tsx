@@ -8,10 +8,10 @@ import { toast } from "sonner";
 import { useUseCase } from "@/context/UseCaseContext";
 
 interface RightContainerProps {
-  data: any;
+  
 }
 
-const RightContainer: React.FC<RightContainerProps> = ({ data }) => {
+const RightContainer: React.FC<RightContainerProps> = () => {
   const { useCase } = useUseCase();
   const [userInputs, setUserInputs] = useState<{ [key: string]: any }>({});
   const [useCaseData, setUseCaseData] = useState<any>(null);

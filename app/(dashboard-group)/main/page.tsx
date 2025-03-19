@@ -6,6 +6,7 @@ import Chatbot from "@/components/Chatbot";
 import UseCaseContainer from "../../../components/UseCaseContainer";
 import RightContainer from "../../../components/RightContainer";
 import { UseCaseData } from "../../../types/user";
+import { useDbContext } from "../../../context/DbContext";
 
 
 const MainContainer: React.FC = () => {
@@ -16,6 +17,8 @@ const MainContainer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [selectedUseCase, setSelectedUseCase] = useState(null);
+
+  const { dbConnected } = useDbContext();
 
   const handleSelectUseCase = async (useCase: string) => {
     setLoading(true);
@@ -44,13 +47,13 @@ const MainContainer: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex h-[85vh] p-1 gap-2">
+    <div className="flex h-[84vh] p-2 gap-2.5">
       <div className="w-1/3 flex flex-col gap-3">
         <UseCaseContainer data={data} onSelectUseCase={handleSelectUseCase} />
         {/* <Chatbot /> */}
       </div>
       <div className="w-2/3">
-        <RightContainer data={data} useCaseData={useCaseData} />
+        <RightContainer />
       </div>
     </div>
   );

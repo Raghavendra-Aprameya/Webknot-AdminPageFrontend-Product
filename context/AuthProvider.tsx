@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<LoginUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true); 
 
   interface RegisterUser {
     username: string;
@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("token", res.data);
     setToken(res.data);
     setUser(jwtDecode<LoginUser>(res.data));
+    console.log(user);
   };
 
   const register = async (credentials: RegisterUser) => {
