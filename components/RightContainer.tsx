@@ -307,7 +307,7 @@ const RightContainer: React.FC<RightContainerProps> = () => {
   };
 
   return (
-    <Card className="p-3 border rounded-lg shadow-md h-full">
+    <Card className="p-3 border rounded-lg shadow-md h-full max-w-[62vw] overflow-auto">
       <div className="space-y-2">
         {selectedUseCase ? (
           <>

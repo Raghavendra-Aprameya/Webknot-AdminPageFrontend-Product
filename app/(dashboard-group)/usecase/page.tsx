@@ -279,6 +279,7 @@ import { X, PlusCircle, Check } from "lucide-react";
 import { useOperationContext } from "@/context/OperationContext";
 import { useDbContext } from "@/context/DbContext";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface ApiOperation {
   use_case_id: string;
@@ -313,8 +314,10 @@ const CrudOperationsPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get("/example_data.json");
-      const { use_cases_result } = response.data.data;
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/use_cases"
+      );
+      const { use_cases_result } = response.data;
 
       setOperations({
         Create: use_cases_result?.create || [],
@@ -405,7 +408,7 @@ const CrudOperationsPage: React.FC = () => {
     <div className="container mx-auto p-4 max-h-screen">
       <div className="flex flex-col md:flex-row gap-4">
         {/* Left Panel */}
-        <Card className="flex-1 p-3 space-y-6">
+        <Card className="flex-1 p-3 space-y-6 min-h-[80vh]">
           <div className="flex justify-between items-center border-b pb-4">
             <h1 className="text-xl font-semibold">AI Generated Use Cases</h1>
             <Button onClick={fetchUseCases} disabled={loading}>
@@ -424,7 +427,7 @@ const CrudOperationsPage: React.FC = () => {
                     {ops.map((op) => (
                       <Card
                         key={op.use_case_id}
-                        className={`p-2 transition-all cursor-pointer hover:bg-accent/50 ${
+                        className={`p-2 transition-all cursor-pointer hover:bg-[#f1f5f9] ${
                           selectedMap[op.use_case_id]
                             ? "border-primary bg-accent/30"
                             : ""
@@ -501,11 +504,46 @@ const CrudOperationsPage: React.FC = () => {
               </Card>
             </>
           ) : (
-            <div className="text-center p-8 border-2 border-dashed">
-              <h2 className="text-xl font-semibold mb-4">
-                Connect Database First
-              </h2>
-              <Button disabled>Connect Database</Button>
+            <div className="w-full flex items-center justify-center">
+              <Card className="text-center text-black my-8 p-8 border-2 border-dashed rounded-lg bg-white">
+                <CardHeader>
+                  <div className="flex justify-center mb-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="48"
+                      height="48"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-gray-300"
+                    >
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                  </div>
+                  <CardTitle className="text-xl font-semibold">
+                    Database Connection Required
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4">
+                    Connect your database to unlock AI-generated use cases
+                    tailored to your schema.
+                  </p>
+                  <Link href="/dbconnect" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="bg-[#f1f5f9] cursor-pointer text-black mt-2"
+                    >
+                      Connect Database
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </div>
           )}
         </Card>
@@ -517,9 +555,12 @@ const CrudOperationsPage: React.FC = () => {
               <CardTitle className="text-lg">Selected Operations</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full" onClick={handleAddSelected}>
+              <Button
+                className="w-full cursor-pointer"
+                onClick={handleAddSelected}
+              >
                 <Check className="mr-2 h-4 w-4" />
-                Confirm Selection
+                Add Seleted Usecases
               </Button>
 
               <div className="space-y-2">
@@ -538,8 +579,11 @@ const CrudOperationsPage: React.FC = () => {
               </div>
 
               {selectedOperations.length > 0 && (
-                <Button className="w-full" onClick={() => router.push("/main")}>
-                  Launch Dashboard
+                <Button
+                  className="w-full cursor-pointer"
+                  onClick={() => router.push("/main")}
+                >
+                  Launch Admin Panel
                 </Button>
               )}
             </CardContent>

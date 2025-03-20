@@ -71,7 +71,7 @@ const UseCaseContainer: React.FC = () => {
   return (
     <Card className="p-2 shadow-md h-full flex flex-col ml-0.5">
       <CardContent className="flex flex-col h-full">
-        <div className="border-b-2 pt-1">
+        <div className="border-b-2 pt-1 mb-1">
           <p className="text-lg font-semibold mb-2">Selected Use Cases</p>
         </div>
 
@@ -84,14 +84,13 @@ const UseCaseContainer: React.FC = () => {
                   className={`cursor-pointer py-2 px-1 transition-colors border-b last:border-none
                     ${
                       selectedUseCase?.use_case_id === useCase.use_case_id
-                        ? "bg-gray-200"
-                        : "hover:bg-gray-100"
+                        ? "bg-[#f1f5f9]"
+                        : "hover:bg-gray-50"
                     }`}
                   onClick={() => handleUseCaseClick(useCase)} // Send entire Operation object
                 >
                   <span className="text-sm text-gray-800">
                     {useCase.use_case}
-                    
                   </span>
                 </li>
               ))}
