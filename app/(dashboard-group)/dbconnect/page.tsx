@@ -119,7 +119,7 @@ const DatabaseConnectionForm = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
               {isLoading ? "Connecting..." : "Connect to Database"}
             </Button>
           </form>

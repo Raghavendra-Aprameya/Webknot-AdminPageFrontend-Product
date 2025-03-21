@@ -23,7 +23,7 @@ export default function MainSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="pl-4 w-18 min-h-screen bg-gray-100 text-black flex flex-col justify-between items-center p-1 pt-8 pb-7">
+    <div className="pl-4 w-18 min-h-screen bg-gray-100 text-black flex flex-col justify-between items-center p-1 pt-7 pb-7">
       {/* <div className="flex items-center justify-center mb-6">
         <Image src="/logo.svg" alt="" width={40} height={40} />
       </div> */}
@@ -32,11 +32,11 @@ export default function MainSidebar() {
         <span className="text-2xl pb-1">A</span>
       </div>
 
-      <nav className="flex flex-col justify-center space-y-4 mb-55">
-        <ul>
+      <nav className="flex flex-col justify-center space-y-4 mb-51">
+        <ul className="flex flex-col gap-1.5">
           <Link href="/home">
             <li
-              className={`group w-12 h-12 flex items-center justify-center border-0 rounded-md transition-colors 
+              className={`group w-12 h-12 flex items-center justify-center border-0 rounded-md transition-colors
               ${pathname === "/home" ? "bg-black text-white" : "hover:bg-black"}
             `}
             >

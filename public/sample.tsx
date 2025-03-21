@@ -45,6 +45,7 @@ const CrudOperationsPage: React.FC = () => {
     if (!dbConnected) return;
 
     setLoading(true);
+    setOperations({ Create: [], Read: [], Update: [], Delete: [] }); // Clear previous data
     try {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/v1/use_cases"
@@ -96,53 +97,6 @@ const CrudOperationsPage: React.FC = () => {
     setSelectedOperations([...selectedOperations, ...newSelections]);
     setFinalSelectedUsecase([...finalSelectedUsecase, ...newSelections]);
     setSelectedMap({});
-  };
-
-
-
-  const handleAddUserOperation = async () => {
-    if (!newUserOperation.trim()) return;
-
-    try {
-      const toastId = toast.loading("Validating use case...");
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/execute_use_case",
-        {
-          use_case: newUserOperation.trim(),
-        }
-      );
-
-      toast.dismiss(toastId);
-
-      const { valid, use_case, query, user_input_columns } = response.data;
-
-      if (valid) {
-        const newOp: ApiOperation = {
-          use_case_id: crypto.randomUUID(),
-          use_case,
-          query,
-          user_input_columns,
-        };
-
-        setUserOperations((prev) => [...prev, newOp]);
-        toast.success("Use case added!");
-      } else {
-        toast.error("Invalid use case");
-      }
-    } catch (error) {
-      toast.error("Validation failed");
-      console.error("Validation error:", error);
-    }
-
-    setNewUserOperation("");
-  };
-
-
-
-  const handleRemoveOperation = (id: string) => {
-    const filtered = selectedOperations.filter((op) => op.use_case_id !== id);
-    setSelectedOperations(filtered);
-    setFinalSelectedUsecase(filtered);
   };
 
   return (
@@ -199,57 +153,6 @@ const CrudOperationsPage: React.FC = () => {
                   </div>
                 </section>
               ))}
-
-              <section>
-                <h2 className="text-lg font-medium mb-2">Custom Operations</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {userOperations.map((op) => (
-                    <Card
-                      key={op.use_case_id}
-                      className={`p-2 transition-all cursor-pointer hover:bg-accent/50 ${
-                        selectedMap[op.use_case_id]
-                          ? "border-primary bg-accent/30"
-                          : ""
-                      }`}
-                      onClick={() => toggleSelection(op.use_case_id)}
-                    >
-                      <CardContent className="flex items-center gap-2 p-2">
-                        <Checkbox
-                          checked={selectedMap[op.use_case_id] || false}
-                          onCheckedChange={(checked: boolean) => {
-                            setSelectedMap((prev) => ({
-                              ...prev,
-                              [op.use_case_id]: checked,
-                            }));
-                          }}
-                        />
-                        <span className="text-sm">{op.use_case}</span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </section>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    Add Custom Operation
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newUserOperation}
-                      onChange={(e) => setNewUserOperation(e.target.value)}
-                      placeholder="Describe your operation..."
-                    />
-                    <Button onClick={handleAddUserOperation}>
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Add
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </>
           ) : (
             <div className="w-full flex items-center justify-center">
@@ -308,33 +211,8 @@ const CrudOperationsPage: React.FC = () => {
                 onClick={handleAddSelected}
               >
                 <Check className="mr-2 h-4 w-4" />
-                Add Seleted Usecases
+                Add Selected Use Cases
               </Button>
-
-              <div className="space-y-2">
-                {selectedOperations.map((op) => (
-                  <div
-                    key={op.use_case_id}
-                    className="flex justify-between items-center p-2 border rounded hover:bg-accent/30 transition-colors"
-                  >
-                    <span className="text-sm">{op.use_case}</span>
-                    <X
-                      className="h-4 w-4 cursor-pointer text-red-500"
-                      onClick={() => handleRemoveOperation(op.use_case_id)}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {selectedOperations.length > 0 && (
-                <Button
-                  variant="ghost"
-                  className="w-full cursor-pointer bg-[#f1f5f9] text-black"
-                  onClick={() => router.push("/main")}
-                >
-                  Launch Admin Panel
-                </Button>
-              )}
             </CardContent>
           </Card>
         </div>
@@ -344,7 +222,3 @@ const CrudOperationsPage: React.FC = () => {
 };
 
 export default CrudOperationsPage;
-
-
-
-

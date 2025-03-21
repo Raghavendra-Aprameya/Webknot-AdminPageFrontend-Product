@@ -191,7 +191,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import axios from "axios";
@@ -232,6 +232,7 @@ const RightContainer: React.FC<RightContainerProps> = () => {
       query: selectedUseCase.query,
       params: userInputValuesArray,
     };
+    // toast.loading("Executing Query...");
 
     console.log("Submitting payload:", payload);
 
@@ -252,6 +253,19 @@ const RightContainer: React.FC<RightContainerProps> = () => {
       toast.error("Error submitting data. Please try again.");
     }
   };
+
+  const handleClear = () => {
+    setUserInputs({});
+    setResponseData(null);
+    console.log("Inputs and response cleared!");
+  };
+
+  useEffect(() => {
+    if (selectedUseCase) {
+      handleClear();
+    }
+  }, [selectedUseCase]);
+
 
   const renderInputs = () => {
     if (!selectedUseCase) return null;
@@ -307,14 +321,14 @@ const RightContainer: React.FC<RightContainerProps> = () => {
   };
 
   return (
-    <Card className="p-3 border rounded-lg shadow-md h-full max-w-[62vw] overflow-auto">
-      <div className="space-y-2">
+    <Card className="p-5 border rounded-lg shadow-md h-full max-w-[62vw] overflow-auto">
+      <div className="space-y-4">
         {selectedUseCase ? (
           <>
             {/* Use selectedUseCase fields */}
             <p className="text-lg font-semibold">{selectedUseCase.use_case}</p>
 
-            <pre className="bg-slate-100 p-2 rounded text-sm overflow-x-auto">
+            <pre className="bg-[#f1f5f9] p-2 rounded text-sm overflow-x-auto">
               {selectedUseCase.query}
             </pre>
 
@@ -322,14 +336,22 @@ const RightContainer: React.FC<RightContainerProps> = () => {
               <p className="text-md font-semibold mt-2">Enter Values:</p>
               {renderInputs()}
             </div>
-
-            <Button
-              className="mt-4"
-              onClick={handleSubmit}
-              disabled={!selectedUseCase}
-            >
-              Submit
-            </Button>
+            <div>
+              <Button
+                className="mt-4 cursor-pointer"
+                onClick={handleSubmit}
+                disabled={!selectedUseCase}
+              >
+                Execute Query
+              </Button>
+              <Button
+                variant="ghost"
+                className="mt-4 ml-2 cursor-pointer bg-[#f1f5f9]"
+                onClick={handleClear}
+              >
+                Clear Response
+              </Button>
+            </div>
           </>
         ) : (
           <div className="flex items-center justify-center h-full w-full">
