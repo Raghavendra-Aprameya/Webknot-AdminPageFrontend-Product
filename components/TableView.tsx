@@ -20,7 +20,9 @@ export default function TableView({ tableName }: TableViewProps) {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/db/fetch-data/${tableName}`,
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.get(
+        `${API_URL}/api/v1/db/fetch-data/${tableName}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

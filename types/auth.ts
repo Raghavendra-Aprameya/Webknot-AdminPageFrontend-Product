@@ -1,4 +1,5 @@
 export interface LoginUser {
+  sub: string;
   username: string;
   password: string;
   exp: number;
@@ -13,4 +14,5 @@ export interface AuthContextType {
     email: string;
     password: string;
   }) => Promise<void>;
+  loading: boolean;
 }

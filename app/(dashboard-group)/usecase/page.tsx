@@ -47,8 +47,9 @@ const CrudOperationsPage: React.FC = () => {
     setLoading(true);
     
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.get(
-        "http://localhost:8080/api/v1/fastapi/use-cases",
+        `${API_URL}/api/v1/fastapi/use-cases`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -62,7 +63,6 @@ const CrudOperationsPage: React.FC = () => {
         Delete: use_cases_result?.delete || [],
       });
     } catch (error) {
-      console.error("Failed to fetch use cases:", error);
       toast.error("Failed to load use cases");
     } finally {
       setLoading(false);
@@ -110,9 +110,10 @@ const CrudOperationsPage: React.FC = () => {
     const token = localStorage.getItem("token");
 
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const toastId = toast.loading("Validating use case...");
       const response = await axios.post(
-        "http://localhost:8080/api/v1/fastapi/execute_use_case",
+        `${API_URL}/api/v1/fastapi/execute_use_case`,
         {
           use_case: newUserOperation.trim(),
         },

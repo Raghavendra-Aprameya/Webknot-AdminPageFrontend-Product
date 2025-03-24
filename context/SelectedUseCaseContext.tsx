@@ -19,10 +19,17 @@ export interface Operation {
   category: OperationCategory; // Assuming this is imported or defined elsewhere
 }
 
+// interface SelectedUseCaseContextType {
+//   selectedUseCase: Operation | null;
+//   setSelectedUseCase: (useCase: Operation) => void;
+// }
+
+
 interface SelectedUseCaseContextType {
   selectedUseCase: Operation | null;
-  setSelectedUseCase: (useCase: Operation) => void;
+  setSelectedUseCase: (useCase: Operation | null) => void;
 }
+
 
 const SelectedUseCaseContext = createContext<
   SelectedUseCaseContextType | undefined

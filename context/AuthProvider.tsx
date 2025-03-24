@@ -39,10 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (credentials: { username: string; password: string }) => {
-    const res = await axios.post(
-      "http://localhost:8080/api/v1/auth/login",
-      credentials
-    );
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const res = await axios.post(`${API_URL}/api/v1/auth/login`, credentials);
     console.log(res);
     localStorage.setItem("token", res.data);
     setToken(res.data);
@@ -51,10 +49,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (credentials: RegisterUser) => {
-    const res = await axios.post(
-      "http://localhost:8080/api/v1/auth/signup",
-      credentials
-    );
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const res = await axios.post("${API_URL}/api/v1/auth/signup", credentials);
     console.log(res);
     localStorage.setItem("token", res.data);
     setToken(res.data);

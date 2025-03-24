@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useDbContext } from "@/context/DbContext"; 
 
@@ -16,9 +15,8 @@ const DatabaseConnectionForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { successMessage, setSuccessMessage, dbConnected, setDbConnected } = useDbContext();
+  const { successMessage, setSuccessMessage, setDbConnected } = useDbContext();
 
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,8 +29,9 @@ const DatabaseConnectionForm = () => {
     setIsLoading(true);
 
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.post(
-        "http://localhost:8080/api/v1/db/connect",
+        `${API_URL}/api/v1/db/connect`,
         {
           connectionUrl: connectionString,
           username,
@@ -64,7 +63,7 @@ const DatabaseConnectionForm = () => {
   };
 
   return (
-    <div className="bg-[#F5F5F7] flex flex-col items-center justify-center min-h-[80vh] bg-white p-4 space-y-4">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white p-4 space-y-4">
       {successMessage && (
         <div className="bg-green-100 text-green-800 p-3 rounded-lg w-[400px] text-center shadow-md">
           {successMessage}

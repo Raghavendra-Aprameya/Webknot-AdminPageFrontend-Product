@@ -20,8 +20,9 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
     const fetchTables = async () => {
       const token = localStorage.getItem("token");
       try {
+        const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
         const response = await axios.get<string[]>(
-          "http://localhost:8080/api/v1/db/fetch-tables",
+          `${API_URL}/api/v1/db/fetch-tables`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

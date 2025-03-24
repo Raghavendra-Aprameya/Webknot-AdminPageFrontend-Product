@@ -30,11 +30,9 @@ export default function Register() {
     setIsSubmitting(true);
     try {
       await register({ username, email, password });
-      console.log("Registration successful! You are now logged in.");
       toast.success("Registration successful!");
       router.push("/login");
     } catch (error) {
-      console.error("Error during registration", error);
       toast.error("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);

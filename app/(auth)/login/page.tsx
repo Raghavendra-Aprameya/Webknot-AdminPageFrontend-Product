@@ -25,7 +25,6 @@ export default function Login() {
       toast.success("Login successful!");
       router.push("/home");
     } catch (error) {
-      console.error("Error during login", error);
       toast.error("Invalid username or password. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -127,7 +126,7 @@ export default function Login() {
 
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{" "}
+            Dont have an account?{" "}
             <Link
               href="/register"
               className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
