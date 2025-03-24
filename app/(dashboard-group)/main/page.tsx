@@ -117,8 +117,6 @@ const MainContainer: React.FC = () => {
         <>
           <div className="w-1/3 flex flex-col gap-3">
             <UseCaseContainer
-              data={data}
-              onSelectUseCase={handleSelectUseCase}
             />
             {/* <Chatbot /> */}
           </div>

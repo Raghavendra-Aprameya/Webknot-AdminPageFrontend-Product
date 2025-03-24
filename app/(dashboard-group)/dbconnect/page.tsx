@@ -64,7 +64,7 @@ const DatabaseConnectionForm = () => {
   };
 
   return (
-    <div className="bg-[#F5F5F7] flex flex-col items-center justify-center min-h-[80vh] bg-white p-4 space-y-4">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white p-4 space-y-4">
       {successMessage && (
         <div className="bg-green-100 text-green-800 p-3 rounded-lg w-[400px] text-center shadow-md">
           {successMessage}

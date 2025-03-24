@@ -9,12 +9,21 @@ export interface Operation {
   user_input_columns: string[];
 }
 
+// interface OperationContextType {
+//   selectedOperations: Operation[];
+//   setSelectedOperations: (ops: Operation[]) => void;
+//   finalSelectedUsecase: Operation[];
+//   setFinalSelectedUsecase: (ops: Operation[]) => void;
+// }
+
+
 interface OperationContextType {
   selectedOperations: Operation[];
-  setSelectedOperations: (ops: Operation[]) => void;
+  setSelectedOperations: React.Dispatch<React.SetStateAction<Operation[]>>;
   finalSelectedUsecase: Operation[];
-  setFinalSelectedUsecase: (ops: Operation[]) => void;
+  setFinalSelectedUsecase: React.Dispatch<React.SetStateAction<Operation[]>>;
 }
+
 
 const OperationContext = createContext<OperationContextType | undefined>(
   undefined
