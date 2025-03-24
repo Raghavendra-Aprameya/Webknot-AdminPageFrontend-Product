@@ -29,8 +29,9 @@ const DatabaseConnectionForm = () => {
     setIsLoading(true);
 
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.post(
-        "http://localhost:8080/api/v1/db/connect",
+        `${API_URL}/api/v1/db/connect`,
         {
           connectionUrl: connectionString,
           username,
