@@ -27,7 +27,7 @@ export default function TableView({ tableName }: TableViewProps) {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response);
+      // console.log(response);
       setTableData(response.data);
     } catch (err) {
       setError("Failed to fetch table data. Please try again.");

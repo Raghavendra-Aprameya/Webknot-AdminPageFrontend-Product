@@ -47,7 +47,7 @@ const RightContainer: React.FC = () => {
       params: userInputValuesArray,
     };
 
-    console.log("Submitting payload:", payload);
+    // console.log("Submitting payload:", payload);
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_FASTAPI_BASE_URL;
@@ -56,7 +56,7 @@ const RightContainer: React.FC = () => {
         payload
       );
 
-      console.log("Response:", response.data);
+      // console.log("Response:", response.data);
       setResponseData(response.data);
 
       toast.success("Data Retrieved Successfully", {

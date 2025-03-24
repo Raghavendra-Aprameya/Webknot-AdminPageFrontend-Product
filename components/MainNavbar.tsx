@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthProvider';
 
 const MainNavbar = () => {
   const { user } = useAuth();
-  console.log("Current User:", user);
   return (
     <div className="flex justify-between items-center p-3 border-b-3 border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="flex justify-center items-center">

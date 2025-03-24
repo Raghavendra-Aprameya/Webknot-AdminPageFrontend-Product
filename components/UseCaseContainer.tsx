@@ -12,8 +12,8 @@ const UseCaseContainer: React.FC = () => {
 
   const handleUseCaseClick = (useCase: any) => {
     console.log(finalSelectedUsecase);
-    setSelectedUseCase(useCase); // Pass the entire Operation object
-    console.log("Selected Use Case Object:", useCase); // Debug if needed
+    setSelectedUseCase(useCase);
+    console.log("Selected Use Case Object:", useCase);
   };
 
   return (
