@@ -6,11 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Page = () => {
   return (
-    <div className="flex max-h-screen h-screen bg-gray-100 overflow-hidden">
-
-      <div className="flex flex-col flex-1 overflow-hidden">
-
-        <div className="p-6 flex-1">
+    <div className="flex max-h-[85vh] bg-white overflow-auto">
+      <div className="flex flex-col flex-1 overflow-auto">
+        <div className="flex-1 border ">
           <Card className="shadow-lg border border-gray-200 bg-white w-{500}">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-gray-800">

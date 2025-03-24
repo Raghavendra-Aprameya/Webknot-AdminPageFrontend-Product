@@ -5,7 +5,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "../context/AuthProvider";
 import { OperationProvider } from "../context/OperationContext";
-import { UseCaseProvider } from './../context/UseCaseContext';
+import { SelectedUseCaseProvider } from "../context/SelectedUseCaseContext";
+import { DbProvider } from "@/context/DbContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,21 +30,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <AuthProvider>
-        <OperationProvider>
-          <UseCaseProvider>
-          <Toaster />
-          {children}
-          </UseCaseProvider>
-        </OperationProvider>
-      </AuthProvider>
-          
-        </body>
-        
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AuthProvider>
+          <DbProvider>
+            <OperationProvider>
+              <SelectedUseCaseProvider>
+                <Toaster />
+                {children}
+              </SelectedUseCaseProvider>
+            </OperationProvider>
+          </DbProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

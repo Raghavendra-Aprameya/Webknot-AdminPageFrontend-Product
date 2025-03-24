@@ -18,9 +18,13 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
 
   useEffect(() => {
     const fetchTables = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get<string[]>(
-          "http://localhost:8080/api/v1/db/fetch-tables"
+          "http://localhost:8080/api/v1/db/fetch-tables",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         setTableNames(response.data);
         setIsLoading(false);
@@ -46,7 +50,7 @@ export function AppSidebar({ onTableSelect }: AppSidebarProps) {
   };
 
   return (
-    <Card className="shadow-md min-h-screen border-r border-slate-200 bg-white w-64">
+    <Card className="shadow-md max-h-[85h] border-r border-slate-200 bg-white w-64">
       <div className="bg-white">
         {/* <div className="bg-white flex flex-col items-center py-6 border-b border-slate-100 shadow-sm h-[93px]">
           <Image src="/logo.png" alt="Brand Logo" width={180} height={10} />

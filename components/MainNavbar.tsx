@@ -5,12 +5,13 @@ import { useAuth } from '../context/AuthProvider';
 
 const MainNavbar = () => {
   const { user } = useAuth();
+  console.log("Current User:", user);
   return (
     <div className="flex justify-between items-center p-3 border-b-3 border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="flex justify-center items-center">
         <div className="ml-6 hidden md:block">
           <h2 className="text-lg text-gray-700 dark:text-gray-300">
-            Welcome back, <span className="font-medium">User!</span>
+            Welcome back, <span className="font-medium">{user?.sub} </span>
           </h2>
         </div>
       </div>
