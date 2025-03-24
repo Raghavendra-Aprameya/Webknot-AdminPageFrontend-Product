@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useDbContext } from "@/context/DbContext"; 
 
@@ -16,9 +15,8 @@ const DatabaseConnectionForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { successMessage, setSuccessMessage, dbConnected, setDbConnected } = useDbContext();
+  const { successMessage, setSuccessMessage, setDbConnected } = useDbContext();
 
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

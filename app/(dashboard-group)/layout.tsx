@@ -3,7 +3,6 @@
 import MainSidebar from "../../components/MainSidebar";
 import { Card } from "../../components/ui/card";
 import MainNavbar from "../../components/MainNavbar";
-import { AuthProvider } from "../../context/AuthProvider";
 import ProtectedRoute from "../../components/ProtectedRoute";
 
 

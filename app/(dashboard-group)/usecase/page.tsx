@@ -62,7 +62,6 @@ const CrudOperationsPage: React.FC = () => {
         Delete: use_cases_result?.delete || [],
       });
     } catch (error) {
-      console.error("Failed to fetch use cases:", error);
       toast.error("Failed to load use cases");
     } finally {
       setLoading(false);

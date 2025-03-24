@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import AppSidebar from "@/components/app-sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Page = () => {
