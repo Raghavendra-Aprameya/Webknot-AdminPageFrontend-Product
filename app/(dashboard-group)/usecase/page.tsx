@@ -43,11 +43,15 @@ const CrudOperationsPage: React.FC = () => {
 
   const fetchUseCases = async () => {
     if (!dbConnected) return;
-
+    const token = localStorage.getItem("token");
     setLoading(true);
+    
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/use_cases"
+        "http://localhost:8080/api/v1/fastapi/use-cases",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       const { use_cases_result } = response.data;
 
@@ -103,12 +107,17 @@ const CrudOperationsPage: React.FC = () => {
   const handleAddUserOperation = async () => {
     if (!newUserOperation.trim()) return;
 
+    const token = localStorage.getItem("token");
+
     try {
       const toastId = toast.loading("Validating use case...");
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/execute_use_case",
+        "http://localhost:8080/api/v1/fastapi/execute_use_case",
         {
           use_case: newUserOperation.trim(),
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -144,6 +153,40 @@ const CrudOperationsPage: React.FC = () => {
     setSelectedOperations(filtered);
     setFinalSelectedUsecase(filtered);
   };
+
+
+
+  const handleLaunchAdminPanel = async () => {
+    if (selectedOperations.length === 0) {
+      toast.error("No use cases selected!");
+      return;
+    }
+
+    const toastId = toast.loading("Creating your Dashboard...");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/usecases/usecase-input",
+        {
+          "useCases": selectedOperations,
+        }
+      );
+
+      toast.dismiss(toastId);
+
+      if (response.status === 201) {
+        toast.success("Use cases saved to dashboard!");
+        setTimeout(() => router.push("/main"), 1000);
+      } else {
+        toast.error("Failed to save use cases.");
+      }
+    } catch (error) {
+      toast.dismiss(toastId);
+      console.error("Error saving use cases:", error);
+      toast.error("Failed to save use cases. Please try again.");
+    }
+  };
+
 
   return (
     <div className="container mx-auto p-4 max-h-screen">
